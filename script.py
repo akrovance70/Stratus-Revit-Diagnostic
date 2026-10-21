@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Revit 2026 / pyRevit V5.2: read-only Stratus/Autodesk translation diagnostic.
+"""Revit 2026 / pyRevit V5.3: read-only Stratus/Autodesk translation diagnostic.
 Runs inside an OPEN PROJECT. No transactions, no model changes, no uploads.
 Compatible with pyRevit IronPython 2.7 / CPython 3 (with Revit API available).
 """
@@ -891,7 +891,7 @@ def generate_executive_reports():
     table=''.join('<tr><td>%s</td><td><b>%s</b></td><td><b>%s</b><p>%s</p></td></tr>' %
                   (i+1,ex_html(a),ex_html(b),ex_html(c)) for i,(a,b,c) in enumerate(actions))
     style='''<style>@page{size:letter;margin:.6in}body{font:13px/1.45 Segoe UI,Arial,sans-serif;color:#203043;max-width:980px;margin:30px auto;padding:0 15px}h1{font-size:25px;margin-bottom:2px}h2{font-size:16px;margin-top:24px}.muted{color:#526377}.status{background:#f0f3f6;border-left:5px solid #8b6914;padding:14px;margin:18px 0}.stats{display:flex;flex-wrap:wrap;gap:12px}.stat{border:1px solid #d5dfe7;border-radius:5px;padding:10px;min-width:120px}.stat b{font-size:20px;display:block}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #d5dfe7;padding:8px;text-align:left;vertical-align:top}th{background:#e9f0f5}td:nth-child(1){width:30px}td:nth-child(2){width:85px}td p{margin:3px 0}.foot{border-top:1px solid #d5dfe7;padding-top:12px;margin-top:16px}@media print{body{margin:0;padding:0}tr{break-inside:avoid}}</style>'''
-    html='''<!doctype html><html><head><meta charset="utf-8"><title>Stratus Executive Diagnostic Summary</title>%s</head><body><p class="muted">WALDINGER TOOLS | STRATUS DIAGNOSTIC</p><h1>Executive Scan Summary</h1><p><b>Model:</b> %s<br><b>Run:</b> %s</p><div class="status"><b>%s</b><p>%s</p><b>Local diagnostics cannot confirm an Autodesk cloud translation PASS.</b></div><div class="stats"><div class="stat"><b>%s</b>Fabrication parts</div><div class="stat"><b>%s</b>Parts tested</div><div class="stat"><b>%s</b>API issues</div><div class="stat"><b>%.2f%%</b>Coverage</div></div><h2>What to look at first</h2><table><thead><tr><th>#</th><th>Priority</th><th>Finding / next action</th></tr></thead><tbody>%s</tbody></table><h2>Scan context</h2><p>Families: %s | Revit link instances: %s | Coordination-model category elements: %s | Deep family scan: %s.</p><p>Scan completion: %s. %s fabrication parts remain untested.</p><div class="foot"><b>How to use this report:</b> For any listed ID, use Revit's Select by ID. Test removals/unloads only in disposable copies using isolated Stratus destinations. Save the detailed CSV reports for Autodesk support. No model content was modified or uploaded by this diagnostic.</div></body></html>''' % (
+    html='''<!doctype html><html><head><meta charset="utf-8"><title>Stratus Executive Diagnostic Summary</title>%s</head><body><p class="muted">STRATUS / REVIT MODEL DIAGNOSTIC</p><h1>Executive Scan Summary</h1><p><b>Model:</b> %s<br><b>Run:</b> %s</p><div class="status"><b>%s</b><p>%s</p><b>Local diagnostics cannot confirm an Autodesk cloud translation PASS.</b></div><div class="stats"><div class="stat"><b>%s</b>Fabrication parts</div><div class="stat"><b>%s</b>Parts tested</div><div class="stat"><b>%s</b>Fabrication geometry alerts</div><div class="stat"><b>%.2f%%</b>Coverage</div></div><h2>What to look at first</h2><table><thead><tr><th>#</th><th>Priority</th><th>Finding / next action</th></tr></thead><tbody>%s</tbody></table><h2>Scan context</h2><p>Families: %s | Revit link instances: %s | Coordination-model category elements: %s | Deep family scan: %s.</p><p>Scan completion: %s. %s fabrication parts remain untested.</p><div class="foot"><b>How to use this report:</b> For any listed ID, use Revit's Select by ID. Test removals/unloads only in disposable copies using isolated Stratus destinations. Save the detailed CSV reports for Autodesk support. No model content was modified or uploaded by this diagnostic.</div></body></html>''' % (
         style,ex_html(model),ex_html(started),ex_html(status),ex_html(explanation),
         total,tested,len(bad),coverage,table,len(families),len(links),coord,
         ex_html(DEEP_FAMILY_SCAN),ex_html('COMPLETE' if valid else 'INCOMPLETE'),max(0,total-tested))
@@ -911,7 +911,7 @@ def generate_executive_reports():
 
 summary = os.path.join(folder,base+'_README.txt')
 with open(summary,'w') as ff:
-    ff.write('Stratus Revit translation diagnostic V5.2\n')
+    ff.write('Stratus Revit translation diagnostic V5.3\n')
     ff.write('Model: '+model+'\nRun: '+txt(started)+'\n')
     ff.write('Families: %s | Types: %s | Instances: %s | Findings: %s | Links/CAD: %s\n' %
              (len(families),len(type_rows),len(instances),len(issue_rows),len(import_rows)))
@@ -920,9 +920,9 @@ with open(summary,'w') as ff:
     ff.write('IMPORTANT: Flags are investigation leads, not proof of cloud translation failure.\n')
     ff.write('Ranked shortlist: %s families. Common plumbing punctuation does not create findings.\n' % len(ranked))
     ff.write('Deep Scan opens families without saving; no edits or Stratus publish performed.\n')
-    ff.write('V5 project element count: %s | categories: %s | DirectShapes: %s | reportable elements: %s\n' % (len(all_instances), len(category_rows),len(shapes),len(element_rows)))
+    ff.write('Project element count: %s | categories: %s | DirectShapes: %s | reportable elements: %s\n' % (len(all_instances), len(category_rows),len(shapes),len(element_rows)))
     ff.write('Nested-family counts now represent placed FamilyInstances in family docs, NOT loaded definitions.\n')
-    ff.write('V5.2 fabrication: %s total | %s geometry tested | %s exceptions | %s metadata groups\n' %
+    ff.write('V5.3 fabrication: %s total | %s geometry tested | %s exceptions | %s metadata groups\n' %
              (len(fab_all),len(fab_rows),len(fab_issue_rows),len(fab_group_rows)))
     ff.write('Fabrication collection: %s | inventory expected: %s | collected: %s\n' %
              (fab_collection_method or 'UNAVAILABLE', fab_expected_count, len(fab_all)))
@@ -942,14 +942,14 @@ with open(summary,'w') as ff:
     ff.write('Revit link audit: %s instances | %s types (V4 count may have been inaccurate)\n' %
              (len([r for r in link_audit_rows if r['Scope']=='INSTANCE']),
               len([r for r in link_audit_rows if r['Scope']=='TYPE'])))
-    ff.write('V5.2 recursive results: %s nested exceptions | %s truncated | %s geometry-null | %s positive-volume solids\n' % (
+    ff.write('V5.3 recursive results: %s nested exceptions | %s truncated | %s geometry-null | %s positive-volume solids\n' % (
         sum(1 for r in fab_rows if r['Geometry Probe']=='NESTED_GEOMETRY_EXCEPTION'),
         sum(1 for r in fab_rows if r['Geometry Probe']=='TRUNCATED'),
         sum(1 for r in fab_rows if r['Geometry Probe']=='NO_GEOMETRY_RETURNED'),
         sum(1 for r in fab_rows if int(r['Solid Count'])>0)))
     ff.write('Recursive traversal caps: depth=%s objects/element=%s. Flags are investigation leads, not translator confirmation.\n' % (DEEP_GEOMETRY_MAX_DEPTH,DEEP_GEOMETRY_MAX_OBJECTS))
     ff.write('Coverage: fabrication sampling is deterministic by service/CID; remaining parts are untested.\n')
-    ff.write('V5.2 outputs Fabrication_Parts, Fabrication_Groups, Fabrication_Issues and Link_Audit.\n')
+    ff.write('V5.3 outputs Fabrication_Parts, Fabrication_Groups, Fabrication_Issues and Link_Audit.\n')
     ff.write('Geometry probes sample placed instances only; unplaced types, buried imports and unshared nested families\n')
     ff.write('may require deep scan/manual inspection. Zero or null geometry is not inherently a defect.\n')
     ff.write('No data was uploaded; files are on your machine only.\n')
@@ -959,7 +959,7 @@ try:
 except Exception as ex:
     print('Executive summary generation failed: ' + errmsg(ex))
 
-message = ('Stratus diagnostic V5.1 complete: %s families, %s types, %s instances; %s findings.\n\n%s' %
+message = ('Stratus diagnostic V5.3 complete: %s families, %s types, %s instances; %s findings.\n\n%s' %
            (len(families),len(type_rows),len(instances),len(issue_rows),'\n'.join(paths)))
 if fab_scan_warnings:
     message += '\n\nSCAN WARNING: ' + '; '.join(fab_scan_warnings)
